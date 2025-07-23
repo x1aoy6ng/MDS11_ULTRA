@@ -14,14 +14,41 @@ const Transcript: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Transcription Screen</h1>
-      <button className="btn btn-secondary mb-3" onClick={() => navigate('/translate')}>
-        Translate
-      </button>
-      <button className="btn btn-primary mb-3 ms-2" onClick={handleDownload}>
-        Download
-      </button>
+    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
+      <div
+        className="position-relative shadow p-4 bg-white rounded"
+        style={{ width: 600, minHeight: 350 }}
+      >
+        {/* Top right controls */}
+        <div style={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: '8px' }}>
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate('/translate')}
+            title="Translate"
+          >
+            Translate
+          </button>
+          <button
+            className="btn btn-outline-success"
+            onClick={handleDownload}
+            title="Download"
+          >
+            Download
+          </button>
+          <button
+            className="btn btn-close ms-2"
+            aria-label="Close"
+            onClick={() => navigate('/')}
+            title="Close"
+          />
+        </div>
+        <h2 className="mb-4">Transcription</h2>
+        <div style={{ minHeight: 200 }}>
+          <p>
+            Transcription text....
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
