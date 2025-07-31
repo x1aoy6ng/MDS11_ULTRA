@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.png';
+import logo from '../assets/logo_title.png';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const Header: React.FC = () => {
           onClick={() => navigate('/')}
           style={{ cursor: 'pointer' }}
         >
-          <img src={logo} alt="Logo" width="200" height="60" className="d-inline-block align-top me-2" />
+          <img src={logo} alt="Logo" width="150" height="50" className="d-inline-block align-top me-2" />
         </button>
         <button className="btn btn-primary ms-auto">
           Settings
