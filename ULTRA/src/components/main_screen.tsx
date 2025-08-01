@@ -46,7 +46,7 @@ const Main: React.FC = () => {
     <div className="d-flex flex-column align-items-center" style={{ minHeight: '70vh' }}>
       <div
         className="shadow p-4 bg-white rounded d-flex flex-column align-items-center"
-        style={{ width: 350 }}
+        style={{ width: 650 }}
       >
         <h3 className="mb-4">Transcribe a local / an online file</h3>
         <button
