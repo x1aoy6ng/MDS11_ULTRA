@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import IconButton from './icon_button';
 
 const Transcript: React.FC = () => {
   const navigate = useNavigate();
@@ -21,28 +22,23 @@ const Transcript: React.FC = () => {
       >
         {/* Top right controls */}
         <div style={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: '8px' }}>
-          <button
-            className="btn btn-primary"
+          
+          {/* Translate button */}
+          <IconButton 
+            icon = {<span className="material-symbols-rounded">translate</span>}
+            ariaLabel='Translate'
             onClick={() => navigate('/translate')}
-            title="Translate"
           >
             Translate
-          </button>
-          <button
-            className="btn btn-outline-success"
-            onClick={handleDownload}
-            title="Download"
-          >
-            Download
-          </button>
-          <button
-            className="btn btn-close ms-2"
-            aria-label="Close"
-            onClick={() => navigate('/')}
-            title="Close"
-          />
+          </IconButton>
+          
+          {/* Download button */}
+          
+          {/* Close button */}
+          
+
         </div>
-        <h2 className="mb-4">Transcription</h2>
+        <h2 className="mb-4">Transcribe</h2>
         <div style={{ minHeight: 200 }}>
           <p>
             Transcription text....
