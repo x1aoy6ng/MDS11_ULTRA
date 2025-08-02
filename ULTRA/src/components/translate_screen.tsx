@@ -86,6 +86,16 @@ const TranslateScreen: React.FC = () => {
   return (
     <div className='flex justify-center items-center bg-gray-50 p-8'>
       <div className="relative shadow-lg p-4 bg-white rounded-xl w-full max-w-7xl min-h-[600px]">
+        {/* put close button at the top right corner */}
+        <div className='absolute -top-4 -right-4'>
+          <IconButton
+            icon={<span className="material-symbols-rounded">close</span>}
+            ariaLabel="Close"
+            circle
+            onClick={() => navigate('/')}
+          />
+        </div>
+        
         {/* main content */}
         <div className='max-w-6xl mx-auto'>
           {/* title */}
@@ -101,14 +111,6 @@ const TranslateScreen: React.FC = () => {
               >
                 Download
               </IconButton>
-              
-              {/* close button */}
-              <IconButton
-                icon={<span className="material-symbols-rounded">close</span>}
-                ariaLabel="Close"
-                circle
-                onClick={() => navigate('/')}
-              />
             </div>
           </div>
 
