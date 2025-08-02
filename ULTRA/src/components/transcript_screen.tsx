@@ -17,16 +17,15 @@ const Transcript: React.FC = () => {
   return (
     <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
       <div
-        className="position-relative shadow p-4 bg-white rounded-4xl"
+        className="position-relative shadow p-4 bg-white rounded-4"
         style={{ width: 1300, minHeight: 550 }}
       >
         {/* Top right controls */}
-        <div style={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: '8px' }}>
-          
+        <div className="position-absolute d-flex gap-2" style={{ top: 16, right: 16 }}>
           {/* Translate button */}
           <IconButton 
-            icon = {<span className="material-symbols-rounded">translate</span>}
-            ariaLabel='Translate'
+            icon={<span className="material-symbols-rounded">translate</span>}
+            ariaLabel="Translate"
             onClick={() => navigate('/translate')}
           >
             Translate
@@ -34,8 +33,8 @@ const Transcript: React.FC = () => {
           
           {/* Download button */}
           <IconButton
-            icon = {<span className="material-symbols-rounded">download</span>}
-            ariaLabel='Download'
+            icon={<span className="material-symbols-rounded">download</span>}
+            ariaLabel="Download"
             onClick={handleDownload}
           >
             Download
@@ -43,20 +42,17 @@ const Transcript: React.FC = () => {
           
           {/* Close button */}
           <IconButton
-            icon = {<span className="material-symbols-rounded">close</span>}
-            ariaLabel='Close'
+            icon={<span className="material-symbols-rounded">close</span>}
+            ariaLabel="Close"
             circle
             onClick={() => navigate('/')}
-          >
-          </IconButton>
+          />
         </div>
 
-        <h1 className="mb-4 text-gray-500">Transcribe</h1>
+        <h1 className="mb-4 text-secondary">Transcribe</h1>
 
         <div style={{ minHeight: 200 }}>
-          <p>
-            Transcription text....
-          </p>
+          <p>Transcription text....</p>
         </div>
       </div>
     </div>

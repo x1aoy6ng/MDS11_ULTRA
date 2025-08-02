@@ -5,21 +5,21 @@ import logo from '../assets/images/logo.png';
 const Header: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <header className="navbar navbar-expand-lg navbar-light bg-light fixed-top py-3">
-      <div className="container-fluid">
+    <header className="fixed top-0 left-0 w-full bg-white shadow-sm py-3 z-50">
+      <div className="flex items-center justify-between px-6">
+        {/* Logo */}
         <button
-          className="navbar-brand btn p-0 border-0 bg-transparent"
+          className="p-0 bg-transparent border-none cursor-pointer"
           onClick={() => navigate('/')}
-          style={{ cursor: 'pointer' }}
           aria-label='Home'
         >
-          <img src={logo} alt="Logo" width="155" className="d-inline-block align-top ms-3" />
+          <img src={logo} alt="Logo" width="155" className="inline-block align-top" />
         </button>
 
+        {/* Settings */}
         <button 
-          className="btn ms-auto me-2 d-flex align-items-center"
+          className="flex items-center justify-center bg-transparent border-none cursor-pointer"
           onClick={() => navigate('/settings')}
-          style={ {background: "transparent", border: 'none', cursor: 'pointer'}}
         >
           <span 
             className="material-symbols-rounded"
@@ -31,7 +31,7 @@ const Header: React.FC = () => {
           >
             settings
           </span>
-          <span className='visually-hidden'>Settings</span>
+          <span className='sr-only'>Settings</span>
         </button>
       </div>
     </header>
