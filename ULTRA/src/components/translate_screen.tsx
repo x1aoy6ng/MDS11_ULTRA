@@ -1,95 +1,203 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import IconButton from './button';
+import { KELANTAN_DICTIONARY } from '../dictionary/kelantan';
+import { SARAWAK_DICTIONARY } from '../dictionary/sarawak';
 
 const TranslateScreen: React.FC = () => {
   const navigate = useNavigate();
-  const [sourceLang, setSourceLang] = useState('Detected: English');
+  const [sourceLang, setSourceLang] = useState('');
   const [targetLang, setTargetLang] = useState('Malay');
-  const [sourceText, setSourceText] = useState('This is the original text.');
-  const [translatedText, setTranslatedText] = useState('Ini adalah teks asal.');
+  const [sourceText, setSourceText] = useState('');
+  const [translatedText, setTranslatedText] = useState('');
+  const [charCount, setCharCount] = useState(0);
+  const maxCharCount = 5000
 
+  // detect language
+  const detectLanguage = (text:string): string => {
+    if (!text.trim()) return '';
+
+    // detect based on common words in dictionary
+    const kelantaneseWord = Object.keys(KELANTAN_DICTIONARY);
+    const sarawakianWord = Object.keys(SARAWAK_DICTIONARY);
+    const lowerText = text.toLowerCase();
+
+    if (kelantaneseWord.some(word => lowerText.includes(word.toLowerCase()))){
+      return "Kelantanese Malay"
+    }
+    else if (sarawakianWord.some(word => lowerText.includes(word.toLowerCase()))){
+      return "Sarawakian Malay"
+    }
+    return "Detect language";
+  }
+
+  // translate function
+  const translateText = (text: string, targetLang: string): string => {
+    if (!text.trim()) return '';
+
+    // TODO
+
+    return translatedText
+  }
+
+  // source text change
+  const handleSourceTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
+    if (text.length <= maxCharCount){
+      setSourceText(text);
+      setCharCount(text.length)
+
+      // detect the language
+      const detectedLang = detectLanguage(text)
+      setSourceLang(detectedLang)
+
+      // auto translate
+      if (text.trim()){
+        const translation = translateText(text, targetLang);
+        setTranslatedText(translation);
+      } else {
+        setTranslatedText('');
+      }
+    }
+  };
+
+  // download the file
   const handleDownload = () => {
+    if (!translatedText) return;
+
+    const blob = new Blob([translatedText], {type: 'text/plain'})
+    const url = URL.createObjectURL(blob)
     const link = document.createElement('a');
-    link.href = '/translation.txt';
+    link.href = url;
     link.download = 'translation.txt';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url)
+  };
+
+  // copy text
+  const HandleCopy = () => {
+    if (translatedText){
+      navigator.clipboard.writeText(translatedText);
+    }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
-      <div
-        className="position-relative shadow p-4 bg-white rounded"
-        style={{ width: 700, minHeight: 400 }}
-      >
-        {/* Top right controls */}
-        <div style={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: '8px' }}>
-          <button
-            className="btn btn-outline-success"
-            onClick={handleDownload}
-            title="Download"
-          >
-            Download
-          </button>
-          <button
-            className="btn btn-close ms-2"
-            aria-label="Close"
-            onClick={() => navigate('/')}
-            title="Close"
-          />
-        </div>
-        {/* Language selection - moved below top controls */}
-        <div style={{ height: 48 }} /> {/* Spacer to push language selection below buttons */}
-        <div className="d-flex justify-content-between mb-3" style={{ gap: '16px' }}>
-          <div>
-            <button className="btn btn-outline-secondary me-2" disabled>
-              {sourceLang}
-            </button>
+    <div className='flex justify-center items-center bg-gray-50 p-8'>
+      <div className="relative shadow-lg p-4 bg-white rounded-xl w-full max-w-7xl min-h-[600px]">
+        {/* main content */}
+        <div className='max-w-6xl mx-auto'>
+          {/* title */}
+          <div className='flex items-center justify-between mb-6'>
+            <h1 className='mt-4 text-4xl font-semibold text-[#585858]'>Translate</h1>
+
+            <div className='mt-4 flex items-center justify-center gap-3'>
+              {/* download button */}
+              <IconButton
+                icon={<span className="material-symbols-rounded">download</span>}
+                ariaLabel="Download"
+                onClick={handleDownload}
+              >
+                Download
+              </IconButton>
+              
+              {/* close button */}
+              <IconButton
+                icon={<span className="material-symbols-rounded">close</span>}
+                ariaLabel="Close"
+                circle
+                onClick={() => navigate('/')}
+              />
+            </div>
           </div>
-          <div>
-            <button
-              className={`btn btn-outline-primary me-2${targetLang === 'Malay' ? ' active' : ''}`}
-              onClick={() => setTargetLang('Malay')}
-            >
-              Malay
-            </button>
-            <button
-              className={`btn btn-outline-primary${targetLang === 'English' ? ' active' : ''}`}
-              onClick={() => setTargetLang('English')}
-            >
-              English
-            </button>
-          </div>
-        </div>
-        {/* Text bubbles */}
-        <div className="d-flex justify-content-between" style={{ gap: '16px' }}>
-          <div
-            className="p-3 bg-light rounded shadow-sm flex-fill"
-            style={{ minHeight: 150, width: '48%' }}
-          >
-            <textarea
-              className="form-control border-0 bg-transparent"
-              style={{ minHeight: 100, resize: 'none' }}
-              onChange={e => setSourceText(e.target.value)}
-              placeholder="Original text"
-            />
-          </div>
-          <div
-            className="p-3 bg-light rounded shadow-sm flex-fill"
-            style={{ minHeight: 150, width: '48%' }}
-          >
-            <textarea
-              className="form-control border-0 bg-transparent"
-              style={{ minHeight: 100, resize: 'none' }}
-              onChange={e => setTranslatedText(e.target.value)}
-              placeholder="Translated text"
-            />
+
+          <div className='border-t border-gray-200'>
+            <div className='grid grid-cols-1 lg:grid-cols-[2fr_auto_2fr] gap-2 mt-6 ml-2 mr-2'>
+              
+              {/* 1. toggles + translation box */}
+              <div className='flex flex-col'>
+                {/* dialect toggles */}
+                <div className='flex gap-4 mb-4'>
+                  <button
+                    className={`transition-colors ${sourceLang === 'Kelantanese Malay'? 'text-[#187FF5] border-b-2 border-[#187FF5]': 'text-[#585858] hover:text-[#55A2FB]'}`}
+                    onClick={() => setSourceLang('Kelantanese Malay')}  
+                  >
+                    Kelantanese Malay
+                  </button>
+
+                  <button
+                    className={`transition-colors ${sourceLang === 'Sarawakian Malay'? 'text-[#187FF5] border-b-2 border-[#187FF5]': 'text-[#585858] hover:text-[#55A2FB]'}`}
+                    onClick={() => setSourceLang('Sarawakian Malay')}  
+                  >
+                    Sarawakian Malay
+                  </button>
+                </div>
+
+                {/* box with transcription */}
+                <div className='bg-[#F9F9F9] rounded-md shadow-sm p-6 mb-2'>
+                  <textarea
+                    className='bg-[#F9F9F9] w-full h-80 resize-none border-none outline-none text-gray-800 placeholder-gray-400 text-lg'
+                    style={{fontSize: '16px'}}
+                    value={sourceText}
+                    onChange={handleSourceTextChange}
+                    placeholder=''
+                  />
+                  <div className='flex items-center justify-end mt-4 pt-4 '>
+                    <div className='flex items-end gap-3 text-[#187FF5] text-sm' style={{fontSize: '15px'}}>
+                      <span>{charCount}/{maxCharCount}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. swap icon */}
+              <div className='flex items-center justify-center px-4'>
+                <button 
+                  className='inline-flex justify-center items-center rounded-full bg-white border border-gray-200 shadow-sm transition-all duration-200 text-[#585858] cursor-default'
+                  style={{width:40, height:30, padding:0}}
+                >
+                  <span className="material-symbols-rounded">swap_horiz</span>
+                </button>
+              </div>
+
+              {/* 3. standard language toggles + transcription box */}
+              <div className='flex flex-col'>
+                {/* target language */}
+                <div className='flex gap-4 mb-4'>
+                  <button
+                    className={`transition-colors ${targetLang === 'Malay'? 'text-[#187FF5] border-b-2 border-[#187FF5]': 'text-[#585858] hover:text-[#55A2FB]'}`}
+                    onClick={() => setTargetLang('Malay')}  
+                  >
+                    Malay
+                  </button>
+
+                  <button
+                    className={`transition-colors ${targetLang === 'English'? 'text-[#187FF5] border-b-2 border-[#187FF5]': 'text-[#585858] hover:text-[#55A2FB]'}`}
+                    onClick={() => setTargetLang('English')}  
+                  >
+                    English
+                  </button>
+                </div>
+
+                {/* translation box */}
+                <div className='bg-[#E8E8E8] rounded-md shadow-sm p-6 mb-2'>
+                  <div className='w-full h-80 text-gray-600 text-lg overflow-y-auto'>
+                    {translatedText || <span className='text-gray-400'>Translation</span>}
+                  </div>
+                  <div className='flex items-center justify-end mt-4 pt-4 mr-2'>
+                    <button className='text-[#187FF5]' onClick={HandleCopy}>
+                      <span className="material-symbols-rounded" style={{fontSize: '20px'}}>content_copy</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default TranslateScreen;
