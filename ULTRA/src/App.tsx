@@ -8,7 +8,9 @@ function App() {
   return (
     <Router>
       <Header />
-      <div style={{ marginTop: '90px' }}>
+      <div 
+        className='pt-[90px] min-h-screen'
+        style={{ backgroundColor: '#F7F9FF' }}>
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/transcript" element={<TranscriptScreen />} />
