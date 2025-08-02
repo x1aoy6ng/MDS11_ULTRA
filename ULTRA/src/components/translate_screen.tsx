@@ -63,17 +63,12 @@ const TranslateScreen: React.FC = () => {
 
   // download the file
   const handleDownload = () => {
-    if (!translatedText) return;
-
-    const blob = new Blob([translatedText], {type: 'text/plain'})
-    const url = URL.createObjectURL(blob)
     const link = document.createElement('a');
-    link.href = url;
-    link.download = 'translation.txt';
+    link.href = '/transcript.txt';
+    link.download = 'transcript.txt';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url)
   };
 
   // copy text

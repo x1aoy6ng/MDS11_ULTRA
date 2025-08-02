@@ -19,7 +19,7 @@ const IconButton: React.FC<ButtonProps> = ({
                 onClick={onClick}
                 type='button'
                 aria-label={ariaLabel}
-                className={`inline-flex items-center justify-center rounded-full bg-white transition-all duration-200 border-none shadow-lg hover:shadow-xl ${className}`}
+                className={`inline-flex items-center justify-center rounded-full bg-white transition-all duration-200 border-none shadow-lg hover:shadow-xl hover:bg-gray-200${className}`}
                 style={{
                     width: size,
                     height:size,
@@ -45,7 +45,7 @@ const IconButton: React.FC<ButtonProps> = ({
             onClick={onClick}
             type="button"
             aria-label={ariaLabel}
-            className={`inline-flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-[#187FF5] via-[#2A8BFB] to-[#51ABFF] text-white font-medium text-lg rounded-full transition-all duration-200 border-none shadow-lg hover:shadow-xl ${className}`}
+            className={`inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-[#187FF5] via-[#2A8BFB] to-[#51ABFF] hover:from-[#419AFF] hover:via-[#4B9FFF] hover:to-[#6CB8FF] text-white font-medium text-lg rounded-full transition-all duration-200 border-none shadow-lg hover:shadow-xl${className}`}
         >   
             <span 
                 className='flex shrink-0' 

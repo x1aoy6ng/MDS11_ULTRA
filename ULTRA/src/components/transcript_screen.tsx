@@ -15,31 +15,10 @@ const Transcript: React.FC = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
-      <div
-        className="position-relative shadow p-4 bg-white rounded-4"
-        style={{ width: 1300, minHeight: 550 }}
-      >
-        {/* Top right controls */}
-        <div className="position-absolute d-flex gap-2" style={{ top: 16, right: 16 }}>
-          {/* Translate button */}
-          <IconButton 
-            icon={<span className="material-symbols-rounded">translate</span>}
-            ariaLabel="Translate"
-            onClick={() => navigate('/translate')}
-          >
-            Translate
-          </IconButton>
-          
-          {/* Download button */}
-          <IconButton
-            icon={<span className="material-symbols-rounded">download</span>}
-            ariaLabel="Download"
-            onClick={handleDownload}
-          >
-            Download
-          </IconButton>
-          
+    <div className="flex justify-center items-center bg-gray-50 p-8">
+      <div className='relative shadow-lg p-4 bg-white rounded-xl w-full max-w-7xl min-h-[600px]'>
+        {/* close button at top right corner */}
+        <div className='absolute -top-4 -right-4'>
           {/* Close button */}
           <IconButton
             icon={<span className="material-symbols-rounded">close</span>}
@@ -49,10 +28,38 @@ const Transcript: React.FC = () => {
           />
         </div>
 
-        <h1 className="mb-4 text-secondary">Transcribe</h1>
+        {/* main content */}
+        <div className="max-w-6xl mx-auto">
+          {/* title */}
+          <div className='flex items-center justify-between gap-4 mb-6'>
+            <h1 className='mt-4 text-4xl font-semibold text-[#585858]'>Transcribe</h1>
+            
+            <div className='mt-4 flex items-center justify-center gap-3'>
+              {/* Translate button */}
+              <IconButton 
+                icon={<span className="material-symbols-rounded">translate</span>}
+                ariaLabel="Translate"
+                onClick={() => navigate('/translate')}
+              >
+                Translate
+              </IconButton>
+              
+              {/* Download button */}
+              <IconButton
+                icon={<span className="material-symbols-rounded">download</span>}
+                ariaLabel="Download"
+                onClick={handleDownload}
+              >
+                Download
+              </IconButton>
+            </div>
+          </div>
 
-        <div style={{ minHeight: 200 }}>
-          <p>Transcription text....</p>
+          <div className='border-t border-gray-200'>
+            {/* TODO: two section */}
+            {/* TODO: file details, video audio */}
+            {/* TODO: transcribed text */}
+          </div>
         </div>
       </div>
     </div>
