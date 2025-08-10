@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CloudArrowUpIcon } from '@heroicons/react/24/outline';
 
 const Main: React.FC = () => {  
   const navigate = useNavigate();
@@ -45,14 +44,14 @@ const Main: React.FC = () => {
 
   return (
     // main container， can make it 50 blue 50 white also
-    <div className="min-h-screen bg-gradient-to-b from-blue-500 to-white flex flex-col items-center p-6">
+    <div className="min-h-screen flex flex-col items-center p-6">
       {/*upload section*/}
       <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-2xl">
         {/* Title */}
         <div className="flex items-center space-x-3 mb-6">
           {/* Green background icon container */}
           <div className='bg-green-200 p-2 rounded-full'>
-            <CloudArrowUpIcon className="h-6 w-6 text-green-700" />
+            <span className="material-symbols-rounded flex items-center justify-center h-6 w-6 text-green-700">cloud_upload</span>
           </div>
           <h2 className="text-lg font-semibold">
             Transcribe a local / an online file

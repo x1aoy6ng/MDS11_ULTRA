@@ -19,7 +19,7 @@ const IconButton: React.FC<ButtonProps> = ({
                 onClick={onClick}
                 type='button'
                 aria-label={ariaLabel}
-                className={`inline-flex items-center justify-center rounded-full bg-white transition-all duration-200 border-none shadow-lg hover:shadow-xl hover:bg-gray-200${className}`}
+                className={`inline-flex items-center justify-center rounded-full bg-white dark:bg-[#404040] transition-all duration-200 border-none shadow-lg hover:shadow-xl hover:bg-gray-200${className}`}
                 style={{
                     width: size,
                     height:size,

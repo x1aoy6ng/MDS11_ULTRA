@@ -79,12 +79,12 @@ const TranslateScreen: React.FC = () => {
   };
 
   return (
-    <div className='flex justify-center items-center bg-gray-50 p-8'>
-      <div className="relative shadow-lg p-4 bg-white rounded-xl w-full max-w-7xl min-h-[670px]">
+    <div className='flex justify-center items-center p-8'>
+      <div className="relative shadow-lg p-4 bg-white dark:bg-[#222222] rounded-xl w-full max-w-7xl min-h-[670px]">
         {/* put close button at the top right corner */}
         <div className='absolute -top-4 -right-4'>
           <IconButton
-            icon={<span className="material-symbols-rounded">close</span>}
+            icon={<span className="material-symbols-rounded dark:text-white">close</span>}
             ariaLabel="Close"
             circle
             onClick={() => navigate('/')}
@@ -95,7 +95,7 @@ const TranslateScreen: React.FC = () => {
         <div className='max-w-6xl mx-auto'>
           {/* title */}
           <div className='flex items-center justify-between mb-6'>
-            <h1 className='mt-4 text-4xl font-semibold text-[#585858]'>Translate</h1>
+            <h1 className='mt-4 text-4xl font-semibold  text-[#585858] dark:text-[#F2F2F2]'>Translate</h1>
 
             <div className='mt-4 flex items-center justify-center gap-3'>
               {/* download button */}
@@ -109,7 +109,7 @@ const TranslateScreen: React.FC = () => {
             </div>
           </div>
 
-          <div className='border-t border-gray-200'>
+          <div className='border-t border-gray-200 dark:border-[#5E5E5E]'>
             <div className='grid grid-cols-1 lg:grid-cols-[2fr_auto_2fr] gap-2 mt-6 ml-2 mr-2'>
               
               {/* 1. toggles + translation box */}
@@ -117,14 +117,14 @@ const TranslateScreen: React.FC = () => {
                 {/* dialect toggles */}
                 <div className='flex gap-4 mb-4'>
                   <button
-                    className={`transition-colors ${sourceLang === 'Kelantanese Malay'? 'text-[#187FF5] border-b-2 border-[#187FF5]': 'text-[#585858] hover:text-[#55A2FB]'}`}
+                    className={`transition-colors ${sourceLang === 'Kelantanese Malay'? 'text-primary border-b-2 border-primary dark:text-primary-dark dark:border-primary-dark' : 'text-[#585858] hover:text-[#55A2FB] dark:text-[#F2F2F2] dark:hover:text-[#B2B2B2]'}`}
                     onClick={() => setSourceLang('Kelantanese Malay')}  
                   >
                     Kelantanese Malay
                   </button>
 
                   <button
-                    className={`transition-colors ${sourceLang === 'Sarawakian Malay'? 'text-[#187FF5] border-b-2 border-[#187FF5]': 'text-[#585858] hover:text-[#55A2FB]'}`}
+                    className={`transition-colors ${sourceLang === 'Sarawakian Malay'? 'text-primary border-b-2 border-primary dark:text-primary-dark dark:border-primary-dark': 'text-[#585858] hover:text-[#55A2FB] dark:text-[#F2F2F2] dark:hover:text-[#B2B2B2]'}`}
                     onClick={() => setSourceLang('Sarawakian Malay')}  
                   >
                     Sarawakian Malay
@@ -132,16 +132,16 @@ const TranslateScreen: React.FC = () => {
                 </div>
 
                 {/* box with transcription */}
-                <div className='bg-[#F9F9F9] rounded-md shadow-sm p-6 mb-2'>
+                <div className='bg-container-light dark:bg-container-dark rounded-md shadow-sm p-6 mb-2'>
                   <textarea
-                    className='bg-[#F9F9F9] w-full h-80 resize-none border-none outline-none text-gray-800 placeholder-gray-400 text-lg'
+                    className='bg-container-light dark:bg-container-dark w-full h-80 resize-none border-none outline-none text-gray-800 dark:text-gray-200 placeholder-gray-400 text-lg'
                     style={{fontSize: '16px'}}
                     value={sourceText}
                     onChange={handleSourceTextChange}
                     placeholder=''
                   />
                   <div className='flex items-center justify-end mt-4 pt-4 '>
-                    <div className='flex items-end gap-3 text-[#187FF5] text-sm' style={{fontSize: '15px'}}>
+                    <div className='flex items-end gap-3 text-primary dark:text-primary-dark text-sm' style={{fontSize: '15px'}}>
                       <span>{charCount}/{maxCharCount}</span>
                     </div>
                   </div>
@@ -151,7 +151,7 @@ const TranslateScreen: React.FC = () => {
               {/* 2. swap icon */}
               <div className='flex items-center justify-center px-4'>
                 <button 
-                  className='inline-flex justify-center items-center rounded-full bg-white border border-gray-200 shadow-sm transition-all duration-200 text-[#585858] cursor-default'
+                  className='inline-flex justify-center items-center rounded-full bg-white dark:bg-[#404040] border border-gray-200 dark:border-[#5c5c5c] shadow-sm transition-all duration-200 text-[#585858] dark:text-white cursor-default'
                   style={{width:40, height:30, padding:0}}
                 >
                   <span className="material-symbols-rounded">swap_horiz</span>
@@ -163,14 +163,14 @@ const TranslateScreen: React.FC = () => {
                 {/* target language */}
                 <div className='flex gap-4 mb-4'>
                   <button
-                    className={`transition-colors ${targetLang === 'Malay'? 'text-[#187FF5] border-b-2 border-[#187FF5]': 'text-[#585858] hover:text-[#55A2FB]'}`}
+                    className={`transition-colors ${targetLang === 'Malay'? 'text-primary dark:text-primary-dark border-b-2 border-primary dark:border-primary-dark': 'text-[#585858] hover:text-[#55A2FB] dark:text-[#F2F2F2] dark:hover:text-[#B2B2B2]'}`}
                     onClick={() => setTargetLang('Malay')}  
                   >
                     Malay
                   </button>
 
                   <button
-                    className={`transition-colors ${targetLang === 'English'? 'text-[#187FF5] border-b-2 border-[#187FF5]': 'text-[#585858] hover:text-[#55A2FB]'}`}
+                    className={`transition-colors ${targetLang === 'English'? 'text-primary dark:text-primary-dark border-b-2 border-primary dark:border-primary-dark': 'text-[#585858] hover:text-[#55A2FB] dark:text-[#F2F2F2] dark:hover:text-[#B2B2B2]'}`}
                     onClick={() => setTargetLang('English')}  
                   >
                     English
@@ -178,12 +178,12 @@ const TranslateScreen: React.FC = () => {
                 </div>
 
                 {/* translation box */}
-                <div className='bg-[#E8E8E8] rounded-md shadow-sm p-6 mb-2'>
+                <div className='bg-container_segment-light dark:bg-container_segment-dark rounded-md shadow-sm p-6 mb-2'>
                   <div className='w-full h-80 text-gray-600 text-lg overflow-y-auto'>
                     {translatedText || <span className='text-gray-400'>Translation</span>}
                   </div>
                   <div className='flex items-center justify-end mt-4 pt-4 mr-2'>
-                    <button className='text-[#187FF5]' onClick={HandleCopy}>
+                    <button className='text-primary dark:text-primary-dark' onClick={HandleCopy}>
                       <span className="material-symbols-rounded" style={{fontSize: '20px'}}>content_copy</span>
                     </button>
                   </div>

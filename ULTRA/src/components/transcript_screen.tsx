@@ -84,12 +84,12 @@ const TranscriptSegment: React.FC<TranscriptSegmentProps> = ({segment, onEdit, o
       : segment.text;
 
   return (
-    <div className='bg-[#E5E5E5] rounded-lg p-4'>
+    <div className='bg-container_segment-light dark:bg-container_segment-dark rounded-lg p-4'>
       <div className='flex items-center justify-between'>
-        <span className='text-[#187FF5] font-medium text-sm'>{segment.startTime}</span>
+        <span className='text-primary dark:text-primary-dark font-medium text-sm'>{segment.startTime}</span>
         <div>
           {!isEditing && (<button 
-            className='text-[#187FF5] hover:text-blue-800'
+            className='text-primary hover:text-blue-800 dark:text-primary-dark'
             onClick={handleStartEdit}
           >
             <span className="material-symbols-rounded" style={{fontSize: '18px'}}>edit_square</span>
@@ -102,7 +102,7 @@ const TranscriptSegment: React.FC<TranscriptSegmentProps> = ({segment, onEdit, o
       {isEditing ? (
         <div className='space-y-2'>
           <textarea
-            className='w-full p-2 mt-2 border border-gray-300 rounded-lg resize-none focus:ring-1 focus:ring-[#2A8BFB] focus:border-transparent'
+            className='w-full p-2 mt-2 border border-gray-300 dark:bg-container-dark dark:text-gray-200 rounded-lg resize-none focus:ring-1 focus:ring-[#2A8BFB] focus:border-transparent'
             ref={textareaRef}
             value={editedText}
             onChange={(e) => setEditedText(e.target.value)}
@@ -128,13 +128,13 @@ const TranscriptSegment: React.FC<TranscriptSegmentProps> = ({segment, onEdit, o
         </div>
       ) : (
         <div className='flex flex-col'>
-            <p className='text-gray-800 leading-relaxed mb-2'>{displayText}</p>
+            <p className='text-gray-800 dark:text-gray-200 leading-relaxed mb-2'>{displayText}</p>
             
             {/* Only shows the show more/less option if is long text */}
             {isLongText && (
               <div className='mt-1 flex justify-end'>
                 <button 
-                  className='flex items-center gap-1 text-[#187FF5] hover:text-blue-800 text-sm font-medium'
+                  className='flex items-center gap-1 text-primary hover:text-blue-800 dark:text-primary-dark text-sm font-medium'
                   onClick={() => onToggleExpand(segment.id)}
                 >
                   {segment.isExpanded? (
@@ -210,13 +210,13 @@ const Transcript: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center bg-gray-50 p-8">
-      <div className='relative shadow-lg p-4 bg-white rounded-xl w-full max-w-7xl min-h-[670px]'>
+    <div className="flex justify-center items-center  p-8">
+      <div className='relative shadow-lg p-4 bg-white dark:bg-[#222222] rounded-xl w-full max-w-7xl min-h-[670px]'>
         {/* close button at top right corner */}
         <div className='absolute -top-4 -right-4 z-10'>
           {/* Close button */}
           <IconButton
-            icon={<span className="material-symbols-rounded">close</span>}
+            icon={<span className="material-symbols-rounded dark:text-white">close</span>}
             ariaLabel="Close"
             circle
             onClick={() => navigate('/')}
@@ -227,7 +227,7 @@ const Transcript: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           {/* title */}
           <div className='flex items-center justify-between gap-4 mb-6'>
-            <h1 className='text-4xl font-semibold text-[#585858] mt-4'>Transcribe</h1>
+            <h1 className='text-4xl font-semibold text-[#585858] dark:text-[#F2F2F2] mt-4'>Transcribe</h1>
             
             <div className='flex items-center justify-center gap-3 mt-4'>
               {/* Translate button */}
@@ -251,9 +251,9 @@ const Transcript: React.FC = () => {
           </div>
 
           {/** file info - TO UPDATE */}
-          <div className='mb-4 border-t border-gray-200'>
-            <h2 className='text-2xl font-medium text-gray-700 mt-4'>audio-01-3.wav</h2>
-            <p className='text-sm'>06/06/2025  16:40 PM</p>
+          <div className='mb-4 border-t border-gray-200 dark:border-[#5E5E5E]'>
+            <h2 className='text-2xl font-medium text-gray-700 dark:text-white mt-4'>audio-01-3.wav</h2>
+            <p className='text-sm dark:text-[#CDCBCB]'>06/06/2025  16:40 PM</p>
           </div>
 
           {/* main content: two sections */}
@@ -275,7 +275,7 @@ const Transcript: React.FC = () => {
                 </div>
 
                 {/* TO UPDATE: audio player */}
-                <div className='bg-gray-100 rounded-lg p-4'>
+                <div className='bg-container-dark rounded-lg p-4'>
                   <audio 
                     controls 
                     src="/Kelantan_001_001_002.wav" // TO UPDATE
@@ -284,9 +284,9 @@ const Transcript: React.FC = () => {
                   >
                     Audio element does not supported
                   </audio>
-                  <div className='text-sm text-[#919191] mt-4 flex flex-wrap items-center gap-3'>
+                  <div className='text-sm text-primary dark:text-primary-dark mt-4 flex flex-wrap items-center gap-3'>
                     <span className='font-medium'>Detected language:</span>
-                    <span className='inline-block px-2 py-1 bg-blue-100 text-[#007AFF] rounded-lg text-xs font-medium'>Sarawakian Malay</span>
+                    <span className='inline-block text-[#303030] dark:text-[#C4C4C4] text-sm font-medium'>Sarawakian Malay</span>
                   </div>
                 </div>
               </div>
@@ -299,7 +299,7 @@ const Transcript: React.FC = () => {
                 </div> */}
 
                 {/* transcription container */}
-                <div className='bg-[#F9F9F9] shadow-lg min-h-[430px] rounded-lg p-4'>
+                <div className='bg-container-light dark:bg-container-dark shadow-lg min-h-[430px] rounded-lg p-4'>
                   <div className='max-h-96 overflow-y-scroll space-y-3 pr-2'>
                     {transcriptSegments.map((segment) =>
                       <TranscriptSegment

@@ -9,8 +9,7 @@ function App() {
     <Router>
       <Header />
       <div 
-        className='pt-[90px] min-h-screen'
-        style={{ backgroundColor: '#F7F9FF' }}>
+        className='pt-[90px] min-h-screen bg-background-light dark:bg-background-dark'>
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/transcript" element={<TranscriptScreen />} />
