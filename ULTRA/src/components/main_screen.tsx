@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CloudArrowUpIcon } from '@heroicons/react/24/outline';
 
-const Main: React.FC = () => {
+const Main: React.FC = () => {  
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [youtubeLink, setYoutubeLink] = useState('');
@@ -43,76 +44,115 @@ const Main: React.FC = () => {
   };
 
   return (
-    <div className="d-flex flex-column align-items-center" style={{ minHeight: '70vh' }}>
-      <div
-        className="shadow p-4 bg-white rounded d-flex flex-column align-items-center"
-        style={{ width: 650 }}
-      >
-        <h3 className="mb-4">Transcribe a local / an online file</h3>
-        <button
-          className="btn btn-outline-primary mb-3"
-          onClick={() => fileInputRef.current?.click()}
+    // main container， can make it 50 blue 50 white also
+    <div className="min-h-screen bg-gradient-to-b from-blue-500 to-white flex flex-col items-center p-6">
+      {/*upload section*/}
+      <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-2xl">
+        {/* Title */}
+        <div className="flex items-center space-x-3 mb-6">
+          {/* Green background icon container */}
+          <div className='bg-green-200 p-2 rounded-full'>
+            <CloudArrowUpIcon className="h-6 w-6 text-green-700" />
+          </div>
+          <h2 className="text-lg font-semibold">
+            Transcribe a local / an online file
+          </h2>
+        </div>
+
+        {/* Drag-and-drop upload area */}
+        <div
+          onClick={() => fileInputRef.current?.click()} // Clicking the box opens file picker
+          className="border-2 border-dashed border-blue-400 rounded-xl p-10 text-center text-gray-500 cursor-pointer hover:bg-blue-50 transition"
         >
-          Upload File
-        </button>
-        <input
+          Click to upload or drag and drop your file here
+          {/* Hidden actual file input */}
+          <input
           type="file"
           accept="audio/*,video/*"
           ref={fileInputRef}
-          style={{ display: 'none' }}
+          className="hidden"
           onChange={handleFileUpload}
-        />
-        <div className="w-100 text-center my-2">or</div>
-        <form className="w-100" onSubmit={handleYoutubeSubmit}>
-          <input
-            type="text"
-            className="form-control mb-3"
-            placeholder="Input YouTube URL"
-            value={youtubeLink}
-            onChange={e => setYoutubeLink(e.target.value)}
           />
-          <button type="submit" className="btn btn-success w-100">
+        </div>
+        
+        {/* Divider with "OR" */}
+        <div className="flex items-center my-6">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="px-4 text-gray-400">OR</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
+        
+        {/* YouTube link input and Transcribe button*/}
+        <form className="flex space-x-2" onSubmit={handleYoutubeSubmit}>
+
+          <div className="flex items-center border-2 border-dashed border-blue-400 rounded-xl px-3 flex-grow">
+            <input
+            type="text"
+            className="flex-grow p-2 outline-none"
+            placeholder="Input YouTube URL ..."
+            value={youtubeLink}
+            onChange={(e) => setYoutubeLink(e.target.value)}
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-6 rounded-xl hover:from-blue-800 hover:to-blue-600 transition"
+          >
             Transcribe
           </button>
         </form>
       </div>
 
-      {/* Recently Processed Files Table */}
-      <div className="mt-5" style={{ width: 700 }}>
-        <h5 className="mb-3">Recently Processed Files</h5>
-        <table className="table table-bordered table-striped">
-          <thead className="table-light">
-            <tr>
-              <th>File Name & Date</th>
-              <th>File Size</th>
-              <th>File Duration</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recentFiles.map((file, idx) => (
-              <tr key={idx}>
-                <td>
-                  <div>{file.name}</div>
-                  <small className="text-muted">{file.date}</small>
-                </td>
-                <td>{file.size}</td>
-                <td>{file.duration}</td>
-                <td>
-                  <span className={`badge ${file.status === 'Completed' ? 'bg-success' : 'bg-warning text-dark'}`}>
-                    {file.status}
-                  </span>
-                </td>
-                <td>
-                  <button className="btn btn-sm btn-outline-primary" disabled={file.status !== 'Completed'}>
-                    Delete
-                  </button>
-                </td>
+      {/* Recently Processed Files Section */}
+      <div className="bg-white shadow rounded-2xl p-4 mt-10 w-full max-w-3xl">
+      {/* Title for recent files */}
+        <h3 className="flex items-center space-x-2 text-lg font-medium mb-4">
+          <span>Recently processed files</span>
+        </h3>
+
+        {/* Table container */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-left text-sm">
+            {/* Table header */}
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-2">File Name & Date</th>
+                <th className="px-4 py-2">File Size</th>
+                <th className="px-4 py-2">File Duration</th>
+                <th className="px-4 py-2">Status</th>
+                <th className="px-4 py-2">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            {/* Table body */}
+            <tbody>
+              {recentFiles.map((file, idx) => (
+                <tr key={idx} className="border-b hover:bg-gray-50">
+
+                  {/* File name and date */}
+                  <td className="px-4 py-3">
+                    <div>{file.name}</div>
+                    <small className="text-gray-500">{file.date}</small>
+                  </td>
+
+                  {/* File size, duration, status, and actions */}
+                  <td className="px-4 py-3">{file.size}</td>
+                  <td className="px-4 py-3">{file.duration}</td>
+                  <td className="px-4 py-3">
+                    <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
+                      {file.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <button className="text-blue-500 hover:underline text-sm">
+                      Download
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>  
+        </div>
       </div>
     </div>
   );
