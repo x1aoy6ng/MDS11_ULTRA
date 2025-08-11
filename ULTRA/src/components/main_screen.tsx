@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import IconButton from './button';
 
 const Main: React.FC = () => {  
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [youtubeLink, setYoutubeLink] = useState('');
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   // Example data for recently processed files
   const recentFiles = [
@@ -24,26 +26,115 @@ const Main: React.FC = () => {
     },
   ];
 
+  // validate the youtube url
+  const isValidYoutubeLink = (url: string): boolean => {
+    if (!url.trim()) return true; // empty url is valid
+    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)[a-zA-Z0-9_-]+/;
+    return youtubeRegex.test(url)
+  }
+
+  // return file size
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 bytes'
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes/Math.pow(k,i)).toFixed(2)) + ' ' + sizes[i]; 
+  }
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       // Handle file upload logic here
-      alert(`File uploaded: ${file.name}`);
-      // navigate('/transcript'); // Uncomment to go to transcript after upload
+      setUploadedFile(file);
+      alert(`File uploaded: ${file.name}`); // for debug
+      navigate('/transcript', {
+        state: {
+          youtubeUrl: youtubeLink.trim() || null,
+          audioFile: file,
+          fileName: file.name,
+          fileSize: formatFileSize(file.size),
+          timeStamp: new Date().toISOString(),
+          source: 'file_upload'
+        }
+      }); 
     }
   };
 
   const handleYoutubeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // check whether user input youtube link
+    if (!youtubeLink.trim()){
+      alert('Please enter a youtube link'); // for debug
+      return;
+    }
+
+    // check whether the youtube link is valid
+    if (!isValidYoutubeLink(youtubeLink)){
+      // pop a dialog showing invalid youtube link
+      alert('Please enter a valid youtube link');   // for debug
+      return;
+    }
+
+
     if (youtubeLink.trim()) {
       // Handle YouTube link logic here
-      alert(`YouTube link submitted: ${youtubeLink}`);
-      navigate('/transcript');
+      alert(`YouTube link submitted: ${youtubeLink}`);    // for debug
+      navigate('/transcript', {
+        state: {
+          youtubeUrl: youtubeLink.trim(),
+          audioFile: null, // to update, audio need to be extracted from video
+          fileName: 'Youtube Video',
+          fileSize: 'N/A',
+          timeStamp: new Date().toISOString(),
+          source: 'youtube_url'
+        }
+      });
     }
   };
 
+  // handle clicking on recent files - navigate to transcript
+  const handleRecentFileCheck = (file: any) => {
+    navigate('/transcript', {
+      state: {
+        youtubeUrl: null,
+        audioFile: null,
+        fileName: file.name,
+        fileSize: file.size,
+        timestamp: file.date,
+        source: 'recent_file'
+      }
+    });
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && (file.type.startsWith('audio/') || (file.type.startsWith('video/')))){
+      setUploadedFile(file);
+
+      navigate('/transcript', {
+        state: {
+          youtubeUrl: youtubeLink.trim() || null,
+          audioFile: file,
+          fileName: file.name,
+          fileSize: formatFileSize(file.size),
+          timestamp: new Date().toISOString(),
+          source: 'file_drop'
+        }
+      });
+    } else {
+      alert('Please drop a valid file/video') // for debug
+    }
+  }
+
   return (
-    // main container， can make it 50 blue 50 white also
+    // main container
     <div className="min-h-screen flex flex-col items-center p-6">
       {/*upload section*/}
       <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-2xl">
@@ -61,6 +152,8 @@ const Main: React.FC = () => {
         {/* Drag-and-drop upload area */}
         <div
           onClick={() => fileInputRef.current?.click()} // Clicking the box opens file picker
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
           className="border-2 border-dashed border-blue-400 rounded-xl p-10 text-center text-gray-500 cursor-pointer hover:bg-blue-50 transition"
         >
           Click to upload or drag and drop your file here
@@ -77,13 +170,12 @@ const Main: React.FC = () => {
         {/* Divider with "OR" */}
         <div className="flex items-center my-6">
           <div className="flex-grow border-t border-gray-300"></div>
-          <span className="px-4 text-gray-400">OR</span>
+          <span className="px-4 text-gray-400 font-medium">OR</span>
           <div className="flex-grow border-t border-gray-300"></div>
         </div>
         
         {/* YouTube link input and Transcribe button*/}
         <form className="flex space-x-2" onSubmit={handleYoutubeSubmit}>
-
           <div className="flex items-center border-2 border-dashed border-blue-400 rounded-xl px-3 flex-grow">
             <input
             type="text"
@@ -93,52 +185,78 @@ const Main: React.FC = () => {
             onChange={(e) => setYoutubeLink(e.target.value)}
             />
           </div>
-          <button
-            type="submit"
-            className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-6 rounded-xl hover:from-blue-800 hover:to-blue-600 transition"
+          {/* Download button */}
+          <IconButton
+            icon={null}
+            ariaLabel="Download"
+            disabled = {!youtubeLink.trim() || !isValidYoutubeLink(youtubeLink)}
+            onClick={() => navigate('/transcript')}     // TO UPDATE
           >
             Transcribe
-          </button>
+          </IconButton>
         </form>
+
+      {/* Youtube URL validation message */}
+      {youtubeLink.trim() && !isValidYoutubeLink(youtubeLink) && (
+        <div className='mt-2 text-red-500 text-sm flex items-center'>
+          <span className="material-symbols-rounded text-base mr-1">error</span>
+          Please enter a valid Youtube URL
+        </div>
+      )}
       </div>
 
       {/* Recently Processed Files Section */}
       <div className="bg-white shadow rounded-2xl p-4 mt-10 w-full max-w-3xl">
       {/* Title for recent files */}
-        <h3 className="flex items-center space-x-2 text-lg font-medium mb-4">
-          <span>Recently processed files</span>
-        </h3>
+      <div className='flex items-center space-x-2 mb-4'>
+        <div
+          className='flex items-center justify-center w-8 h-8 rounded-full bg-[#E8E8E8] dark:bg-[#2F2E32] cursor-pointer'
+          >
+          <span className="material-symbols-rounded text-xl text-primary dark:text-primary-dark">history</span>
+        </div>
+        <h3 className="text-lg font-medium">Recently processed files</h3>
+      </div>
 
-        {/* Table container */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            {/* Table header */}
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-4 py-2">File Name & Date</th>
-                <th className="px-4 py-2">File Size</th>
-                <th className="px-4 py-2">File Duration</th>
-                <th className="px-4 py-2">Status</th>
-                <th className="px-4 py-2">Actions</th>
-              </tr>
-            </thead>
 
-            {/* Table body */}
-            <tbody>
+      {/* Table container */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-left text-sm rounded-sm">
+          {/* Table header */}
+          <thead className="bg-[#F3F2F2] dark:bg-[#46444B]">
+            <tr>
+              <th className="px-4 py-3 text-[#787878] dark:text-[#DADADA]">File Name & Date</th>
+              <th className="px-4 py-3 text-[#787878] dark:text-[#DADADA]">File Size</th>
+              <th className="px-4 py-3 text-[#787878] dark:text-[#DADADA]">File Duration</th>
+              <th className="px-4 py-3 text-[#787878] dark:text-[#DADADA]">Status</th>
+              <th className="px-4 py-3 text-[#787878] dark:text-[#DADADA]">Actions</th>
+            </tr>
+          </thead>
+
+          {/* Table body */}
+          <tbody>
               {recentFiles.map((file, idx) => (
-                <tr key={idx} className="border-b hover:bg-gray-50">
+                <tr key={idx} className="border-b hover:bg-gray-50 transition-colors duration-150">
 
                   {/* File name and date */}
-                  <td className="px-4 py-3">
-                    <div>{file.name}</div>
-                    <small className="text-gray-500">{file.date}</small>
+                  <td className="px-4 py-2">
+                    <button
+                      onClick={() => handleRecentFileCheck(file)}
+                      className='text-left hover:text-primary transition-colors'
+                    >
+                      <div className='dark:text-[#CECDCD]'>{file.name}</div>
+                      <small className="text-[#CDCBCB]">{file.date}</small>
+                    </button>
                   </td>
 
                   {/* File size, duration, status, and actions */}
-                  <td className="px-4 py-3">{file.size}</td>
-                  <td className="px-4 py-3">{file.duration}</td>
-                  <td className="px-4 py-3">
-                    <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
+                  <td className="px-4 py-3 dark:text-[#CECDCD]">{file.size}</td>
+                  <td className="px-4 py-3 dark:text-[#CECDCD]">{file.duration}</td>
+                  <td className="px-4 py-3 dark:text-[#CECDCD]">
+                    <span className={`px-3 py-1 rounded-full text-xs ${
+                      file.status === "Completed" 
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-yellow-100 text-yellow-700'
+                    }`}>
                       {file.status}
                     </span>
                   </td>
@@ -152,6 +270,14 @@ const Main: React.FC = () => {
             </tbody>
           </table>  
         </div>
+
+        {recentFiles.length === 0 &&(
+          <div>
+            <span className="material-symbols-rounded text-4xl mb-2 black">folder_open</span>
+            <p>No recent file found</p>
+          </div>
+        )}
+
       </div>
     </div>
   );

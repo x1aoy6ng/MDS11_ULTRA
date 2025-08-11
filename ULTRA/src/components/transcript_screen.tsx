@@ -275,7 +275,7 @@ const Transcript: React.FC = () => {
                 </div>
 
                 {/* TO UPDATE: audio player */}
-                <div className='bg-container-dark rounded-lg p-4'>
+                <div className='bg-gray-100 dark:bg-container-dark rounded-lg p-4'>
                   <audio 
                     controls 
                     src="/Kelantan_001_001_002.wav" // TO UPDATE
