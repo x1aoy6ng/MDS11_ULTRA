@@ -22,7 +22,7 @@ const Main: React.FC = () => {
       date: '2025-07-22 16:40',
       size: '15.8 MB',
       duration: '00:10:05',
-      status: 'Processing',
+      status: 'Failed',
     },
   ];
 
@@ -41,25 +41,6 @@ const Main: React.FC = () => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes/Math.pow(k,i)).toFixed(2)) + ' ' + sizes[i]; 
   }
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // Handle file upload logic here
-      setUploadedFile(file);
-      alert(`File uploaded: ${file.name}`); // for debug
-      navigate('/transcript', {
-        state: {
-          youtubeUrl: youtubeLink.trim() || null,
-          audioFile: file,
-          fileName: file.name,
-          fileSize: formatFileSize(file.size),
-          timeStamp: new Date().toISOString(),
-          source: 'file_upload'
-        }
-      }); 
-    }
-  };
 
   const handleYoutubeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,6 +72,25 @@ const Main: React.FC = () => {
           source: 'youtube_url'
         }
       });
+    }
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Handle file upload logic here
+      setUploadedFile(file);
+      alert(`File uploaded: ${file.name}`); // for debug
+      navigate('/transcript', {
+        state: {
+          youtubeUrl: youtubeLink.trim() || null,
+          audioFile: file,
+          fileName: file.name,
+          fileSize: formatFileSize(file.size),
+          timeStamp: new Date().toISOString(),
+          source: 'file_upload'
+        }
+      }); 
     }
   };
 
@@ -131,6 +131,16 @@ const Main: React.FC = () => {
     } else {
       alert('Please drop a valid file/video') // for debug
     }
+  }
+
+  const handleDownload = () => {
+    // Implement download logic here
+    alert('Download functionality is not implemented yet.'); // for debug
+  }
+  
+  const handleDelete = () => {
+    // Implement delete logic here
+    alert('Delete functionality is not implemented yet.'); // for debug
   }
 
   return (
@@ -206,7 +216,7 @@ const Main: React.FC = () => {
       </div>
 
       {/* Recently Processed Files Section */}
-      <div className="bg-white shadow rounded-2xl p-4 mt-10 w-full max-w-3xl">
+      <div className="bg-white shadow rounded-2xl p-6 mt-10 w-full max-w-2xl">
       {/* Title for recent files */}
       <div className='flex items-center space-x-2 mb-4'>
         <div
@@ -255,15 +265,33 @@ const Main: React.FC = () => {
                     <span className={`px-3 py-1 rounded-full text-xs ${
                       file.status === "Completed" 
                         ? 'bg-green-100 text-green-700'
+                        : file.status === "Failed"
+                        ? 'bg-red-100 text-red-700'
                         : 'bg-yellow-100 text-yellow-700'
                     }`}>
                       {file.status}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <button className="text-blue-500 hover:underline text-sm">
-                      Download
-                    </button>
+                    <div className="flex items-center">
+                      {/* Download button */}
+                      <button
+                        onClick={handleDownload}
+                        className="text-blue-500 hover:text-blue-700 transition"
+                        aria-label="Download"
+                      >
+                        <span className="py-1 material-symbols-outlined">download</span>
+                      </button>
+
+                      {/* Delete button */}
+                      <button
+                        onClick={handleDelete}
+                        className="text-red-500 hover:text-red-700 transition"
+                        aria-label="Delete"
+                      >
+                        <span className="py-1 material-symbols-outlined">delete</span>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
