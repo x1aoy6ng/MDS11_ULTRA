@@ -177,7 +177,7 @@ const Main: React.FC = () => {
           />
         </div>
 
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-3 pl-2 text-xs text-gray-400">
           Supported formats: MP3, WAV, MP4, M4A, MOV, AVI.
         </p>
         
@@ -190,7 +190,7 @@ const Main: React.FC = () => {
         
         {/* YouTube link input and Transcribe button*/}
         <form className="flex space-x-2" onSubmit={handleYoutubeSubmit}>
-          <div className="flex items-center border-2 border-dashed border-blue-400 rounded-xl px-3 flex-grow">
+          <div className="flex items-center border-2 border-dashed border-blue-400 rounded-xl px-3 flex-grow placeholder-gray-500">
             <input
             type="text"
             className="flex-grow p-2 outline-none"
