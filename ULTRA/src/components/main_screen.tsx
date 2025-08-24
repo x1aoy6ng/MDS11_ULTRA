@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import IconButton from './button';
 
@@ -7,6 +7,7 @@ const Main: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [youtubeLink, setYoutubeLink] = useState('');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [history, setHistory] = useState<any[]>([]); // to store recent files
 
   // Example data for recently processed files
   const recentFiles = [
@@ -75,12 +76,32 @@ const Main: React.FC = () => {
     }
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // triggered when user upload a file
+  const handleFileUpload = async(event: React.ChangeEvent<HTMLInputElement>) => { 
+    // event.target.files is a FileList object
     const file = event.target.files?.[0];
-    if (file) {
-      // Handle file upload logic here
-      setUploadedFile(file);
-      alert(`File uploaded: ${file.name}`); // for debug
+
+    if (!file) return; // no file selected
+
+    setUploadedFile(file); // store the uploaded file (locally)
+
+    // build the form data to send to backend
+    const formData = new FormData();
+    formData.append('file', file);
+
+    fetchHistory(); // refresh the recent files
+
+    try {
+      // send the file to backend
+      const response = await fetch('http://localhost:5000/upload', { //fetch return a Promise
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      console.log('File uploaded successfully:', data);
+
+      // navigate to transcript screen with the uploaded file info
       navigate('/transcript', {
         state: {
           youtubeUrl: youtubeLink.trim() || null,
@@ -91,8 +112,75 @@ const Main: React.FC = () => {
           source: 'file_upload'
         }
       }); 
+
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Error uploading file'); // for debug
     }
   };
+
+  // handle drag and drop
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault(); // prevent opening the file in browser
+  };
+
+  const handleDrop = async(e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    
+    if (!file || !(file.type.startsWith("audio/") || file.type.startsWith("video/"))) {
+      alert("Please drop a valid audio/video file");
+      return;
+    }
+
+    setUploadedFile(file);
+
+    // build the form data to send to backend
+    const formData = new FormData();
+    formData.append('file', file);
+
+    fetchHistory(); // refresh history
+
+    try {
+      // send the file to backend
+      const response = await fetch('http://localhost:5000/upload', { //fetch return a Promise
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      console.log('File uploaded successfully via drag-drop:', data);
+
+      // navigate to transcript screen with the uploaded file info
+      navigate('/transcript', {
+        state: {
+          youtubeUrl: youtubeLink.trim() || null,
+          audioFile: file,
+          fileName: file.name,
+          fileSize: formatFileSize(file.size),
+          timeStamp: new Date().toISOString(),
+          source: 'file_drop'
+        }
+      }); 
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Error uploading file'); // for debug
+    }
+  };
+
+  const fetchHistory = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/history');
+      const data = await response.json();
+      setHistory(data);
+    } catch (error) {
+      console.error('Error fetching history:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchHistory();
+  }, []); // Empty dependency array ensures it runs only once when the component mounts.
 
   // handle clicking on recent files - navigate to transcript
   const handleRecentFileCheck = (file: any) => {
@@ -100,38 +188,13 @@ const Main: React.FC = () => {
       state: {
         youtubeUrl: null,
         audioFile: null,
-        fileName: file.name,
-        fileSize: file.size,
-        timestamp: file.date,
+        fileName: file.fileName,
+        fileSize: file.size || 'N/A',
+        timestamp: file.uploadDate,
         source: 'recent_file'
       }
     });
   };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && (file.type.startsWith('audio/') || (file.type.startsWith('video/')))){
-      setUploadedFile(file);
-
-      navigate('/transcript', {
-        state: {
-          youtubeUrl: youtubeLink.trim() || null,
-          audioFile: file,
-          fileName: file.name,
-          fileSize: formatFileSize(file.size),
-          timestamp: new Date().toISOString(),
-          source: 'file_drop'
-        }
-      });
-    } else {
-      alert('Please drop a valid file/video') // for debug
-    }
-  }
 
   const handleDownload = () => {
     // Implement download logic here
@@ -248,7 +311,7 @@ const Main: React.FC = () => {
 
           {/* Table body */}
           <tbody>
-              {recentFiles.map((file, idx) => (
+              {history.map((file, idx) => (
                 <tr key={idx} className="border-b hover:bg-gray-50 transition-colors duration-150">
 
                   {/* File name and date */}
@@ -257,8 +320,8 @@ const Main: React.FC = () => {
                       onClick={() => handleRecentFileCheck(file)}
                       className='text-left hover:text-primary transition-colors'
                     >
-                      <div className='dark:text-[#CECDCD]'>{file.name}</div>
-                      <small className="text-[#CDCBCB]">{file.date}</small>
+                      <div className='dark:text-[#CECDCD]'>{file.fileName}</div>
+                      <small className="text-[#CDCBCB]">{new Date(file.uploadDate).toLocaleString()}</small>
                     </button>
                   </td>
 
@@ -303,9 +366,9 @@ const Main: React.FC = () => {
           </table>  
         </div>
 
-        {recentFiles.length === 0 &&(
-          <div>
-            <span className="material-symbols-rounded text-4xl mb-2 black">folder_open</span>
+        {history.length === 0 &&(
+          <div className = "flex items-center space-x-2 pt-2">
+            <span className="material-symbols-rounded text-3xl">folder_open</span>
             <p>No recent file found</p>
           </div>
         )}
