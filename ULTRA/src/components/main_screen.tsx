@@ -170,7 +170,7 @@ const Main: React.FC = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('http://localhost:5027/history');
+      const response = await fetch('/history');
       const data = await response.json();
       setHistory(data);
     } catch (error) {

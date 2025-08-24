@@ -18,11 +18,30 @@ export const useAuth = () => {
 
     const sendPasscode = async(email: string): Promise<void> => {
         // update API calls here
-        
+        const response = await fetch('/api/auth/send-passcode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to send passcode');
+        }
     };
 
     const verifyPasscode = async(email: string, passcode: string): Promise<void> => {
         // update API calls here
+        const response = await fetch('/api/auth/verify-passcode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, passcode }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Invalid passcode');
+        }
+
+        const data = await response.json();
 
         // update the auth state
         setAuthState({
@@ -31,6 +50,9 @@ export const useAuth = () => {
         });
 
         // store the token
+        if (data.token) {
+            localStorage.setItem('auth_token', data.token);
+        }
     };
 
     // control the dialog
