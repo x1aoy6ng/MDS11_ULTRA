@@ -11,7 +11,7 @@ app.use(cors({
 const routes = require("./routes");
 app.use("/", routes);
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5027;
 app.listen(port, () => {
   console.log(`Serve at http://localhost:${port}`);
 });

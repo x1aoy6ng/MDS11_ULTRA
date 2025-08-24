@@ -93,7 +93,7 @@ const Main: React.FC = () => {
 
     try {
       // send the file to backend
-      const response = await fetch('http://localhost:5000/upload', { //fetch return a Promise
+      const response = await fetch('http://localhost:5027/upload', { //fetch return a Promise
         method: 'POST',
         body: formData,
       });
@@ -143,7 +143,7 @@ const Main: React.FC = () => {
 
     try {
       // send the file to backend
-      const response = await fetch('http://localhost:5000/upload', { //fetch return a Promise
+      const response = await fetch('http://localhost:5027/upload', { //fetch return a Promise
         method: 'POST',
         body: formData,
       });
@@ -170,7 +170,7 @@ const Main: React.FC = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('http://localhost:5000/history');
+      const response = await fetch('http://localhost:5027/history');
       const data = await response.json();
       setHistory(data);
     } catch (error) {
