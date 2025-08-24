@@ -176,9 +176,13 @@ const Main: React.FC = () => {
           onChange={handleFileUpload}
           />
         </div>
+
+        <p className="mt-2 text-xs text-gray-500">
+          Supported formats: MP3, WAV, MP4, M4A, MOV, AVI.
+        </p>
         
         {/* Divider with "OR" */}
-        <div className="flex items-center my-6">
+        <div className="flex items-center pt-2 pb-5">
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="px-4 text-gray-400 font-medium">OR</span>
           <div className="flex-grow border-t border-gray-300"></div>
