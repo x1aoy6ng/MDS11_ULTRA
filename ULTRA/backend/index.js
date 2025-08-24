@@ -2,7 +2,10 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
-app.use(cors()); // allow React frontend to talk to backend
+// app.use(cors()); // allow React frontend to talk to backend
+app.use(cors({
+  origin: "http://localhost:5173"   // allow your React frontend
+}));
 
 //Import routes
 const routes = require("./routes");
