@@ -1,0 +1,16 @@
+node_modules
+
+# Environment files (API keys, secrets)
+.env
+
+# Uploaded files (from multer)
+uploads
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
